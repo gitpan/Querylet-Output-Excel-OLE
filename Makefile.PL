@@ -9,7 +9,7 @@ WriteMakefile(
     ABSTRACT_FROM       => 'lib/Querylet/Output/Excel/OLE.pm',
     PL_FILES            => {},
     PREREQ_PM => {
-        'Querylet'   => 0.26,
+        'Querylet'   => 0.28,
         'Test::More' => 0,
         'Win32::OLE' => 0.17,
     },

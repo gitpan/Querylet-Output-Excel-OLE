@@ -10,13 +10,13 @@ Querylet::Output::Excel::OLE - output query results to Excel via OLE
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
- $Id: OLE.pm,v 1.7 2004/09/23 19:58:56 rjbs Exp $
+ $Id: OLE.pm,v 1.9 2004/12/16 16:15:53 rjbs Exp $
 
 =cut
 
-our $VERSION = '0.12';
+our $VERSION = '0.13';
 use Carp;
 
 =head1 SYNOPSIS
@@ -74,10 +74,10 @@ sub _to_excel {
 	my $workbook  = $q->option('excel_workbook');
 	my $worksheet = $q->option('excel_worksheet');
 
-	my $range = [[ @{$q->columns} ]];
+	my $range = [[ map { $q->header($_) } @{$q->columns} ]];
 
 	foreach my $row (@{$q->results}) {
-		push @$range, [ @$row{@{$range->[0]}} ];
+		push @$range, [ @$row{@{$q->columns}} ];
 	}
 
 	my $rows   = @$range;
