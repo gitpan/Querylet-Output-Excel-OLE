@@ -1,11 +1,11 @@
 # http://module-build.sourceforge.net/META-spec.html
 #XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
 name:         Querylet-Output-Excel-OLE
-version:      0.10
+version:      0.12
 version_from: lib/Querylet/Output/Excel/OLE.pm
 installdirs:  site
 requires:
-    Querylet:                      0.22
+    Querylet:                      0.26
     Test::More:                    0
     Win32::OLE:                    0.17
 

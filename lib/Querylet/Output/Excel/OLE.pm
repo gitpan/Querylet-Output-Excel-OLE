@@ -10,13 +10,14 @@ Querylet::Output::Excel::OLE - output query results to Excel via OLE
 
 =head1 VERSION
 
-version 0.10
+version 0.12
 
- $Id: OLE.pm,v 1.2 2004/09/21 12:34:09 rjbs Exp $
+ $Id: OLE.pm,v 1.7 2004/09/23 19:58:56 rjbs Exp $
 
 =cut
 
-our $VERSION = '0.10';
+our $VERSION = '0.12';
+use Carp;
 
 =head1 SYNOPSIS
 
@@ -58,6 +59,11 @@ The Querylet::Output::Excel::OLE handler returns a coderef that, when called,
 will create an Excel.Application object, then create a workbook, and then
 populate its worksheet with the querylet's results.
 
+If the "excel_workbook" and "excel_worksheet" options are set, it will attempt
+to open the named workbook file and put its results into the named worksheet,
+creating it if necessary.  If the workbook, but not worksheet, is set, it will
+create a new worksheet in the named workbook.
+
 =cut
 
 sub handler { \&_to_excel }
@@ -65,8 +71,10 @@ sub handler { \&_to_excel }
 sub _to_excel {
 	my $q = shift;
 
-	my $range = [];
-	push @$range, [ @{$q->columns} ];
+	my $workbook  = $q->option('excel_workbook');
+	my $worksheet = $q->option('excel_worksheet');
+
+	my $range = [[ @{$q->columns} ]];
 
 	foreach my $row (@{$q->results}) {
 		push @$range, [ @$row{@{$range->[0]}} ];
@@ -80,11 +88,30 @@ sub _to_excel {
 		require Win32::OLE::Const;
 		Win32::OLE::Const->import('Microsoft Excel');
 
-		my $xl = Win32::OLE->new("Excel.Application");
-		   $xl->{Visible}=1;
-		my $xls = $xl->Workbooks->Add->Worksheets(1);
-		   $xls->Range("A1:$column$rows")->{Value} = $range;
-		   $xls->Range("A1:${column}1")->{Font}->{Bold} = 1;
+		my $xl = Win32::OLE->new("Excel.Application")
+			or croak "can't create a new Excel application";
+	  $xl->{Visible} = 1;
+
+		my ($xlb,$xls);
+
+		if ($workbook) {
+			$xlb = $xl->Workbooks->Open($workbook)
+				or croak "can't open workbook $workbook";
+		} else {
+			$xlb = $xl->Workbooks->Add;
+		}
+
+		$xls = $xlb->Worksheets(defined $worksheet ? $worksheet : 1);
+
+		unless ($xls) {
+			$xls = $xlb->Worksheets->Add;
+			$xls->{Name} = $worksheet if $worksheet;
+		}
+		unless ($xls)   { croak "can't find worksheet $worksheet" }
+
+		$xls->Range("A1:$column$rows")->{Formula} = $range;
+		$xls->Range("A1:${column}1")->{Font}->{Bold} = 1;
+		$xls->Range("A1:${column}1")->AutoFit();
 	}
 }
 
