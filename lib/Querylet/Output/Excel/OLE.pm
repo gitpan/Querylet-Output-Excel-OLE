@@ -10,13 +10,13 @@ Querylet::Output::Excel::OLE - output query results to Excel via OLE
 
 =head1 VERSION
 
-version 0.13
+version 0.14
 
- $Id: OLE.pm,v 1.9 2004/12/16 16:15:53 rjbs Exp $
+ $Id: OLE.pm,v 1.11 2005/01/12 16:45:25 rjbs Exp $
 
 =cut
 
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 use Carp;
 
 =head1 SYNOPSIS
@@ -64,6 +64,16 @@ to open the named workbook file and put its results into the named worksheet,
 creating it if necessary.  If the workbook, but not worksheet, is set, it will
 create a new worksheet in the named workbook.
 
+If the "excel_postprocessing_callback" option is set, the handler will try to
+evaluate it into a code reference, the code reference will be called after all
+other processing is done.  It will be passed a hash reference with the
+following keys:
+
+ query     - the Querylet::Query object being output
+ excel     - the Excel.Application object
+ workbook  - the Workbook object
+ worksheet - the Worksheet object
+
 =cut
 
 sub handler { \&_to_excel }
@@ -73,6 +83,9 @@ sub _to_excel {
 
 	my $workbook  = $q->option('excel_workbook');
 	my $worksheet = $q->option('excel_worksheet');
+	my $postproc  = $q->option('excel_postprocessing_callback');
+	$postproc &&= eval $postproc;
+	warn "couldn't eval postprocessing callback: $@" if $@;
 
 	my $range = [[ map { $q->header($_) } @{$q->columns} ]];
 
@@ -112,6 +125,10 @@ sub _to_excel {
 		$xls->Range("A1:$column$rows")->{Formula} = $range;
 		$xls->Range("A1:${column}1")->{Font}->{Bold} = 1;
 		$xls->Range("A1:${column}1")->AutoFit();
+
+		$postproc->(
+			{ excel => $xl, workbook => $xlb, worksheet=> $xls, query => $q }
+		) if (ref($postproc)||'' eq 'CODE');
 	}
 }
 
