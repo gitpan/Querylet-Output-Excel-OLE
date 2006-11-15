@@ -10,13 +10,13 @@ Querylet::Output::Excel::OLE - output query results to Excel via OLE
 
 =head1 VERSION
 
-version 0.14
+version 0.141
 
- $Id: OLE.pm,v 1.11 2005/01/12 16:45:25 rjbs Exp $
+ $Id: /my/cs/projects/q/excel/trunk/lib/Querylet/Output/Excel/OLE.pm 28050 2006-11-14T23:40:46.906717Z rjbs  $
 
 =cut
 
-our $VERSION = '0.14';
+our $VERSION = '0.141';
 use Carp;
 
 =head1 SYNOPSIS
@@ -171,13 +171,13 @@ Ricardo SIGNES, C<< <rjbs@cpan.org> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to
-C<bug-querylet-output-excelapp@rt.cpan.org>, or through the web interface at
+C<bug-querylet-output-excel-ole@rt.cpan.org>, or through the web interface at
 L<http://rt.cpan.org>.  I will be notified, and then you'll automatically be
 notified of progress on your bug as I make changes.
 
 =head1 COPYRIGHT
 
-Copyright 2004 Ricardo SIGNES, All Rights Reserved.
+Copyright 2004-2006, Ricardo SIGNES, All Rights Reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
