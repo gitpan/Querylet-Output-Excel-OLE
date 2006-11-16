@@ -1,8 +1,8 @@
 --- #YAML:1.0
 name:                Querylet-Output-Excel-OLE
-version:             0.141
+version:             0.142
 abstract:            output query results to Excel via OLE
-license:             ~
+license:             perl
 generated_by:        ExtUtils::MakeMaker version 6.31
 distribution_type:   module
 requires:     

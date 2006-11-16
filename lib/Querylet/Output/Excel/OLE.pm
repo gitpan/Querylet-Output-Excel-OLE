@@ -10,13 +10,13 @@ Querylet::Output::Excel::OLE - output query results to Excel via OLE
 
 =head1 VERSION
 
-version 0.141
+version 0.142
 
  $Id: /my/cs/projects/q/excel/trunk/lib/Querylet/Output/Excel/OLE.pm 28050 2006-11-14T23:40:46.906717Z rjbs  $
 
 =cut
 
-our $VERSION = '0.141';
+our $VERSION = '0.142';
 use Carp;
 
 =head1 SYNOPSIS
